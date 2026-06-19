@@ -20,13 +20,7 @@ if "messages" not in strl.session_state:
         {"role": "assistant", "content": "হ্যালো! আমি আপনার ডিজিটাল সিকিউরিটি অ্যাসিস্ট্যান্ট। ফেসবুক, ইনস্টাগ্রাম, ইউটিউব বা টিকটকের নিরাপত্তা নিয়ে যেকোনো প্রশ্ন করতে পারেন।"}
     ]
 
-with strl.sidebar:
-    user_key = strl.text_input("আপনার Gemini API Key দিন:", type="password", value=strl.session_state.api_key)
-    if user_key and user_key != strl.session_state.api_key:
-        strl.session_state.api_key = user_key
-        strl.rerun()
 
-# ৩. লোকাল টেক্সট ফাইল থেকে প্রাসঙ্গিক তথ্য খোঁজার ফাংশন (RAG এর বিকল্প সহজ লজিক)
 def search_local_context(query):
     if not os.path.exists("security_data.txt"):
         return ""
@@ -34,7 +28,7 @@ def search_local_context(query):
     with open("security_data.txt", "r", encoding="utf-8") as f:
         content = f.read()
     
-    # প্রশ্নটির প্রধান কিওয়ার্ডগুলো দিয়ে টেক্সট ফাইল থেকে প্রাসঙ্গিক প্যারাগ্রাফ খুঁজে নেওয়া
+    
     keywords = [word.lower() for word in query.split() if len(word) > 2]
     paragraphs = content.split("\n\n")
     relevant_chunks = []
@@ -47,12 +41,12 @@ def search_local_context(query):
                 
     return "\n\n".join(relevant_chunks[:3]) if relevant_chunks else content
 
-# আগের চ্যাট হিস্ট্রি স্ক্রিনে দেখানো
+
 for message in strl.session_state.messages:
     with strl.chat_message(message["role"]):
         strl.markdown(message["content"])
 
-# ৪. অ্যাকশন এবং রেসপন্স লজিক
+
 if not strl.session_state.api_key:
     strl.warning("⚠️ Google API Key খুঁজে পাওয়া যায়নি। অনুগ্রহ করে সাইডবারে আপনার API Key দিন।")
 else:
@@ -62,10 +56,10 @@ else:
         strl.session_state.messages.append({"role": "user", "content": user_input})
         
         try:
-            # গুগলের একদম নতুন প্রোডাকশন ক্লায়েন্ট ব্যবহার
+           
             client = genai.Client(api_key=strl.session_state.api_key)
             
-            # লোকাল ফাইল থেকে তথ্য নেওয়া
+         
             context = search_local_context(user_input)
             
             system_instruction = (
@@ -78,7 +72,7 @@ else:
             
             with strl.chat_message("assistant"):
                 with strl.spinner("তথ্য খোঁজা হচ্ছে..."):
-                    # ২০২৬ সালের লেটেস্ট জেমিনি মডেল দিয়ে রেসপন্স জেনারেট করা
+                  
                     response = client.models.generate_content(
                         model='gemini-2.5-flash',
                         contents=user_input,
@@ -89,7 +83,7 @@ else:
                     )
                     bot_reply = response.text
                     
-                    # লেখার ভেতরের যেকোনো সাধারণ লিঙ্ককে স্বয়ংক্রিয়ভাবে ক্লিকেবল লিঙ্কে রূপান্তর করার লজিক
+                   
                     url_pattern = r'(https?://[^\s]+|(?:www\.)?[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}(?:/[^\s]*)?)'
                     def make_clickable(match):
                         url = match.group(0)
