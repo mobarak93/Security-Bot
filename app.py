@@ -6,7 +6,7 @@ from google.genai import types
 
 # ১. স্ট্রিমলিট পেজ সেটআপ
 strl.set_page_config(page_title="Digital Security AI Bot", page_icon="🛡️", layout="centered")
-strl.title("🛡️ Social Media Security Assistant")
+strl.title("🛡️ Security Assistant")
 #strl.subheader("ফ্রি ও নিরাপদ ডিজিটাল সিকিউরিটি গাইড")
 
 # ২. API Key হ্যান্ডেল করা (Secrets এবং সাইডবার উভয় সাপোর্ট)
