@@ -9,9 +9,12 @@ strl.set_page_config(page_title="Digital Security AI Bot", page_icon="🛡️", 
 strl.title("🛡️ Social Media Security Assistant")
 strl.subheader("ফ্রি ও নিরাপদ ডিজিটাল সিকিউরিটি গাইড")
 
-# ২. Session State-এ API Key ও চ্যাট হিস্ট্রি হ্যান্ডেল করা
-if "api_key" not in strl.session_state:
+# ২. API Key হ্যান্ডেল করা (Secrets এবং সাইডবার উভয় সাপোর্ট)
+if "GOOGLE_API_KEY" in strl.secrets:
+    strl.session_state.api_key = strl.secrets["GOOGLE_API_KEY"]
+elif "api_key" not in strl.session_state:
     strl.session_state.api_key = ""
+
 if "messages" not in strl.session_state:
     strl.session_state.messages = [
         {"role": "assistant", "content": "হ্যালো! আমি আপনার ডিজিটাল সিকিউরিটি অ্যাসিস্ট্যান্ট। ফেসবুক, ইনস্টাগ্রাম, ইউটিউব বা টিকটকের নিরাপত্তা নিয়ে যেকোনো প্রশ্ন করতে পারেন।"}
