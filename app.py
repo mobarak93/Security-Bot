@@ -1,6 +1,6 @@
 import os
-import re
 import streamlit as strl
+import re
 from google import genai
 from google.genai import types
 
@@ -20,14 +20,13 @@ if "messages" not in strl.session_state:
         {"role": "assistant", "content": "হ্যালো! আমি আপনার ডিজিটাল সিকিউরিটি অ্যাসিস্ট্যান্ট। ফেসবুক, ইনস্টাগ্রাম, ইউটিউব বা টিকটকের নিরাপত্তা নিয়ে যেকোনো প্রশ্ন করতে পারেন।"}
     ]
 
-
+# ৩. লোকাল টেক্সট ফাইল থেকে প্রাসঙ্গিক তথ্য খোঁজার ফাংশন
 def search_local_context(query):
     if not os.path.exists("security_data.txt"):
         return ""
     
     with open("security_data.txt", "r", encoding="utf-8") as f:
         content = f.read()
-    
     
     keywords = [word.lower() for word in query.split() if len(word) > 2]
     paragraphs = content.split("\n\n")
@@ -39,14 +38,14 @@ def search_local_context(query):
                 relevant_chunks.append(para)
                 break
                 
-    return "\n\n".join(relevant_chunks[:3]) if relevant_chunks else content
+    return "\n\n".join(relevant_chunks[:3]) if relevant_chunks else ""
 
-
+# আগের চ্যাট হিস্ট্রি স্ক্রিনে দেখানো
 for message in strl.session_state.messages:
     with strl.chat_message(message["role"]):
         strl.markdown(message["content"])
 
-
+# ৪. অ্যাকশন এবং রেসপন্স লজিক
 if not strl.session_state.api_key:
     strl.warning("⚠️ Google API Key খুঁজে পাওয়া যায়নি। অনুগ্রহ করে সাইডবারে আপনার API Key দিন।")
 else:
@@ -56,34 +55,33 @@ else:
         strl.session_state.messages.append({"role": "user", "content": user_input})
         
         try:
-           
             client = genai.Client(api_key=strl.session_state.api_key)
-            
-         
             context = search_local_context(user_input)
             
             system_instruction = (
-                "You are an expert Social Media Security Assistant. Help users secure their "
-                "platforms (Facebook, X, Instagram, YouTube, TikTok) based ONLY on the provided context.\n\n"
-                f"Context from database:\n{context}\n\n"
-                "If the query is not related to the context, answer: 'দুঃখিত, এই প্ল্যাটফর্ম বা সিকিউরিটি সেটিংসের সঠিক তথ্য আমার ডেটাবেজে নেই।'\n"
-                "Always try to reply in the language (Bangla/English) the user asks."
+                "You are an expert Social Media Security Assistant. Help users secure their platforms.\n"
+                "CRITICAL INSTRUCTION:\n"
+                f"1. First, check this Local Context from the user's database: [{context}]. If this context contains the specific answer or links, prioritize it over everything else.\n"
+                "2. If the answer is NOT found in the local context, use the enabled Google Search tool to find official, trusted, and up-to-date documentation (e.g., Meta Help Center, Google Support) to answer accurately.\n"
+                "3. Always double-check security advice and prioritize official platforms' official URLs.\n"
+                "4. Always try to reply in the language (Bangla/English) the user asks."
             )
             
             with strl.chat_message("assistant"):
-                with strl.spinner("তথ্য খোঁজা হচ্ছে..."):
-                  
+                with strl.spinner("তথ্য খোঁজা ও যাচাই করা হচ্ছে..."):
+                    # গুগলের লাইভ সার্চ গ্রাউন্ডিং টুল অ্যাক্টিভেট করা হয়েছে
                     response = client.models.generate_content(
                         model='gemini-2.5-flash',
                         contents=user_input,
                         config=types.GenerateContentConfig(
                             system_instruction=system_instruction,
-                            temperature=0.2
+                            temperature=0.3,
+                            tools=[{"google_search": {}}]  # এই লাইনটি লাইভ গুগল সার্চ একটিভেট করবে
                         )
                     )
                     bot_reply = response.text
                     
-                   
+                    # সব লিঙ্ক স্বয়ংক্রিয়ভাবে ক্লিকযোগ্য করার লজিক
                     url_pattern = r'(https?://[^\s]+|(?:www\.)?[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}(?:/[^\s]*)?)'
                     def make_clickable(match):
                         url = match.group(0)
