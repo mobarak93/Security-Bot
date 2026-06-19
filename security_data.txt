@@ -1,0 +1,12 @@
+[Facebook Security]
+To enable Two-Factor Authentication (2FA) on Facebook: Go to Settings & Privacy > Settings > Accounts Center > Password and Security > Two-factor authentication.
+ফেসবুক অ্যাকাউন্ট হ্যাক হলে পুনরুদ্ধার করতে ফেসবুকের অফিশিয়াল লিংক facebook.com/hacked এ ভিজিট করুন।
+
+[Instagram Privacy]
+To make your Instagram account private: Open Instagram > Go to your Profile > Tap Menu > Settings and privacy > Account privacy > Toggle on 'Private account'.
+
+[YouTube & Google Security]
+ইউটিউব চ্যানেল সুরক্ষিত রাখতে টু-স্টেপ ভেরিফিকেশন (2-Step Verification) চালু করুন এবং গুগল অ্যাকাউন্ট সিকিউরিটি থেকে 'Enhanced Safe Browsing' অপশনটি অন করুন।
+
+[TikTok Security]
+TikTok অ্যাকাউন্টে টু-ফ্যাক্টর ভেরিফিকেশন চালু করতে: Profile > Settings and Privacy > Security > Two-step verification এ যান।
