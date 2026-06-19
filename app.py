@@ -95,4 +95,13 @@ else:
             strl.rerun()
             
         except Exception as e:
+            
             strl.error(f"API থেকে উত্তর তৈরিতে সমস্যা হয়েছে: {str(e)}")
+# ৫. কাস্টম ফুটার (Copyright & Branding)
+strl.markdown("---")
+strl.markdown(
+    "<div style='text-align: center; color: #888888; font-size: 14px;'>"
+    "© 2026 <b>Md. Hosne Mobarak</b> | All Rights Reserved"
+    "</div>", 
+    unsafe_allow_html=True
+)
