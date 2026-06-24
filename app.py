@@ -4,7 +4,7 @@ import re
 from google import genai
 from google.genai import types
 
-# ১. স্ট্রিমলিট পেজ সেটআপ
+
 strl.set_page_config(page_title="Digital Security AI Bot", page_icon="🛡️", layout="centered")
 strl.markdown(
     "<h1 style='text-align: left; font-size: calc(1.8rem + 1vw); word-break: keep-all; white-space: nowrap;'>🛡️ Security Assistant</h1>", 
@@ -23,7 +23,7 @@ if "messages" not in strl.session_state:
         {"role": "assistant", "content": "হ্যালো! আমি আপনার ডিজিটাল সিকিউরিটি অ্যাসিস্ট্যান্ট। ফেসবুক, ইনস্টাগ্রাম, ইউটিউব বা টিকটকের নিরাপত্তা নিয়ে যেকোনো প্রশ্ন করতে পারেন।"}
     ]
 
-# ৩. লোকাল টেক্সট ফাইল থেকে প্রাসঙ্গিক তথ্য খোঁজার ফাংশন
+
 def search_local_context(query):
     if not os.path.exists("security_data.txt"):
         return ""
@@ -43,12 +43,12 @@ def search_local_context(query):
                 
     return "\n\n".join(relevant_chunks[:3]) if relevant_chunks else ""
 
-# আগের চ্যাট হিস্ট্রি স্ক্রিনে দেখানো
+
 for message in strl.session_state.messages:
     with strl.chat_message(message["role"]):
         strl.markdown(message["content"])
 
-# ৪. অ্যাকশন এবং রেসপন্স লজিক
+
 if not strl.session_state.api_key:
     strl.warning("⚠️ Google API Key খুঁজে পাওয়া যায়নি। অনুগ্রহ করে সাইডবারে আপনার API Key দিন।")
 else:
@@ -72,7 +72,7 @@ else:
             
             with strl.chat_message("assistant"):
                 with strl.spinner("তথ্য খোঁজা ও যাচাই করা হচ্ছে..."):
-                    # গুগলের লাইভ সার্চ গ্রাউন্ডিং টুল অ্যাক্টিভেট করা হয়েছে
+
                     response = client.models.generate_content(
                         model='gemini-2.5-flash',
                         contents=user_input,
@@ -84,7 +84,7 @@ else:
                     )
                     bot_reply = response.text
                     
-                    # সব লিঙ্ক স্বয়ংক্রিয়ভাবে ক্লিকযোগ্য করার লজিক
+                   
                     url_pattern = r'(https?://[^\s]+|(?:www\.)?[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}(?:/[^\s]*)?)'
                     def make_clickable(match):
                         url = match.group(0)
@@ -100,7 +100,7 @@ else:
         except Exception as e:
             
             strl.error(f"API থেকে উত্তর তৈরিতে সমস্যা হয়েছে: {str(e)}")
-# ৫. কাস্টম ফুটার (Copyright & Branding)
+# (Copyright & Branding)
 strl.markdown("---")
 strl.markdown(
     "<div style='text-align: center; color: #888888; font-size: 14px;'>"
